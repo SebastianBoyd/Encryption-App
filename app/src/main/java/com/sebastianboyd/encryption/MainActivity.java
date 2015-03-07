@@ -25,6 +25,15 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Check for available NFC Adapter
+        NfcAdapter mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
+        if (mNfcAdapter == null) {
+            Toast.makeText(this, "NFC is not available", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        // Register callback
+        mNfcAdapter.setNdefPushMessageCallback(this, this);
     }
 
 
@@ -49,6 +58,7 @@ public class MainActivity extends Activity implements CreateNdefMessageCallback 
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public NdefMessage createNdefMessage(NfcEvent event) {
         String text = ("Beam me up, Android!\n\n" +
